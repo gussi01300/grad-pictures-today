@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { uploadToR2 } from "@/lib/r2";
-import { checkRateLimit, setSecurityHeaders, validateFileUpload, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/security";
+import { checkRateLimit, setSecurityHeaders, validateFileUpload } from "@/lib/security";
 import { validateSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 

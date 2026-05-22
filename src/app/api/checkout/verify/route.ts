@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { setSecurityHeaders } from "@/lib/security";
 import { retrieveCheckoutSession } from "@/lib/stripe";
 import { handleWebhookPaymentSuccess } from "@/services/payment.service";
 

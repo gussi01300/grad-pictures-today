@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { setSecurityHeaders, checkRateLimit } from "@/lib/security";
+import { setSecurityHeaders } from "@/lib/security";
 import { requireAdmin } from "@/lib/security";
 import { processRefund } from "@/services/payment.service";
 

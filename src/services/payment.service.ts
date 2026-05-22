@@ -4,7 +4,6 @@ import {
   retrieveCheckoutSession,
   createRefund,
 } from "@/lib/stripe";
-import type { PaymentStatus } from "@prisma/client";
 
 export async function createPayment(
   userId: string,

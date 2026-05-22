@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { GenerationForm, type GenerationFormData } from "@/components/forms/generation-form";
@@ -9,12 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { imageSizePresets, backgroundPresets, stylePresets } from "@/lib/utils";
+import { backgroundPresets, stylePresets } from "@/lib/utils";
 
 type GenerationStatus = "idle" | "uploading" | "generating" | "completed" | "error";
 
 export default function PortraitsPage() {
-  const router = useRouter();
   const [user, setUser] = React.useState<{ email: string; role: string } | null>(null);
   const [status, setStatus] = React.useState<GenerationStatus>("idle");
   const [progress, setProgress] = React.useState(0);

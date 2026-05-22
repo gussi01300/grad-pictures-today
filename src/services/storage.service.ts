@@ -1,10 +1,6 @@
 import { db } from "@/lib/db";
 import { deleteFromR2, listR2Objects } from "@/lib/r2";
 import { redis } from "@/lib/redis";
-
-const UPLOAD_EXPIRY_HOURS = parseInt(
-  process.env.UPLOAD_EXPIRY_HOURS ?? "24"
-);
 const GENERATION_EXPIRY_HOURS = parseInt(
   process.env.GENERATION_EXPIRY_HOURS ?? "168"
 );
@@ -17,7 +13,7 @@ interface CleanupResult {
 export async function cleanupExpiredUploads(): Promise<CleanupResult> {
   const now = new Date();
   let deletedCount = 0;
-  let deletedSize = 0;
+  const deletedSize = 0;
 
   // Find expired uploads
   const expiredUploads = await db.upload.findMany({
@@ -54,7 +50,7 @@ export async function cleanupExpiredGenerations(): Promise<CleanupResult> {
     now.getTime() - GENERATION_EXPIRY_HOURS * 60 * 60 * 1000
   );
   let deletedCount = 0;
-  let deletedSize = 0;
+  const deletedSize = 0;
 
   // Find expired generations (completed ones older than expiry)
   const expiredGenerations = await db.generation.findMany({

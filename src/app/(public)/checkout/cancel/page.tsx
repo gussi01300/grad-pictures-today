@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import Link from "next/link";
 
 export default function CheckoutCancelPage() {
   return (
@@ -19,16 +19,16 @@ export default function CheckoutCancelPage() {
               Your payment was cancelled. You can still use your free previews or try again when you&apos;re ready.
             </p>
             <div className="space-y-4">
-              <a href="/yearbook" className="block">
-                <button className="w-full bg-primary text-primary-foreground px-6 py-2 rounded-md font-medium hover:bg-primary/90">
+              <Link href="/yearbook" className="block">
+                <button type="button" className="w-full bg-primary text-primary-foreground px-6 py-2 rounded-md font-medium hover:bg-primary/90">
                   Back to Yearbook Photo
                 </button>
-              </a>
-              <a href="/portraits" className="block">
-                <button className="w-full border border-input px-6 py-2 rounded-md font-medium hover:bg-accent">
+              </Link>
+              <Link href="/portraits" className="block">
+                <button type="button" className="w-full border border-input px-6 py-2 rounded-md font-medium hover:bg-accent">
                   Back to Graduation Portraits
                 </button>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -79,9 +80,9 @@ export default function AdminDashboardPage() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Admin Dashboard</h1>
           <div className="flex items-center gap-4">
-            <a href="/" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
               View Site
-            </a>
+            </Link>
             <Button variant="outline" size="sm" onClick={handleLogout}>
               Logout
             </Button>

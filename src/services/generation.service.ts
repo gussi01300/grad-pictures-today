@@ -3,7 +3,6 @@ import { redis } from "@/lib/redis";
 import { generateImage, type GenerationParams } from "@/lib/openrouter";
 import { db } from "@/lib/db";
 import { uploadToR2, getSignedDownloadUrl } from "@/lib/r2";
-import { v4 as uuidv4 } from "uuid";
 
 const QUEUE_NAME = "image-generation";
 
@@ -75,10 +74,7 @@ export async function processGenerationJob(
       },
     });
 
-    // Generate watermark URL for preview
-    const watermarkKey = `generations/${generationId}/watermark.png`;
-    // Note: Watermarking would be done here - for now, we'll use the same URL
-    // In production, you'd process the image to add watermark
+    // Update generation with watermark URL (frontend adds watermark overlay)
     await db.generation.update({
       where: { id: generationId },
       data: {

@@ -1,10 +1,15 @@
 import { SignJWT, jwtVerify } from "jose";
 import { db } from "./db";
 import type { UserRole } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET ?? "default-secret-change-in-production"
-);
+const JWT_SECRET = (() => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is required");
+  }
+  return new TextEncoder().encode(secret);
+})();
 
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? "7d";
 
@@ -99,17 +104,12 @@ export async function invalidateSession(token: string): Promise<void> {
 }
 
 export async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  return bcrypt.hash(password, 12);
 }
 
 export async function verifyPassword(
   password: string,
   hash: string
 ): Promise<boolean> {
-  const passwordHash = await hashPassword(password);
-  return passwordHash === hash;
+  return bcrypt.compare(password, hash);
 }

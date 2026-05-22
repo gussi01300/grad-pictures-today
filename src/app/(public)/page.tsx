@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -190,7 +189,7 @@ export default function HomePage() {
               {testimonials.map((t) => (
                 <Card key={t.name}>
                   <CardContent className="pt-6">
-                    <p className="text-muted-foreground mb-4">"{t.text}"</p>
+                    <p className="text-muted-foreground mb-4">&ldquo;{t.text}&rdquo;</p>
                     <div>
                       <p className="font-semibold">{t.name}</p>
                       <p className="text-sm text-muted-foreground">{t.university}</p>

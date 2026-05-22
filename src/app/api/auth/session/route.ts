@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateSession } from "@/lib/auth";
-import { setSecurityHeaders } from "@/lib/security";
 import { db } from "@/lib/db";
 
 export async function GET(request: NextRequest) {

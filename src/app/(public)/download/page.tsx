@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
@@ -35,7 +36,7 @@ export default function DownloadPage() {
       .catch(console.error);
   }, []);
 
-  const loadGenerations = async (currentUser: { email: string; role: string }) => {
+  const loadGenerations = async () => {
     try {
       const res = await fetch("/api/generation/status");
       const data = await res.json();
@@ -85,7 +86,7 @@ export default function DownloadPage() {
                     Generate your first graduation photo to see it here.
                   </p>
                   <Button asChild>
-                    <a href="/yearbook">Get Started</a>
+                    <Link href="/yearbook">Get Started</Link>
                   </Button>
                 </CardContent>
               </Card>

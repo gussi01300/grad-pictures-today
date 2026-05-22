@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getSignedDownloadUrl } from "@/lib/r2";
-import { setSecurityHeaders } from "@/lib/security";
 import { validateSession } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {

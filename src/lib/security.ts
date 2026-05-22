@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken, type JWTPayload } from "./auth";
 import { redis } from "./redis";
-import { headers } from "next/headers";
 
 // Rate limiting configuration
 const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX ?? "100");
@@ -56,7 +55,7 @@ export async function checkRateLimit(
   request: NextRequest
 ): Promise<NextResponse | null> {
   const ip = getClientIP(request);
-  const { success, remaining, resetAt } = await rateLimit(ip);
+  const { success, resetAt } = await rateLimit(ip);
 
   if (!success) {
     return NextResponse.json(

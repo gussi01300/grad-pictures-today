@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { createToken, createSession, hashPassword, verifyPassword } from "@/lib/auth";
+import { createToken, createSession, hashPassword } from "@/lib/auth";
 import { checkRateLimit, setSecurityHeaders, sanitizeString } from "@/lib/security";
 
 const registerSchema = z.object({

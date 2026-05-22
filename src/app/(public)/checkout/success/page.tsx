@@ -1,24 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
 export default function CheckoutSuccessPage() {
-  const [sessionId, setSessionId] = React.useState<string | null>(null);
-
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("session_id");
     if (id) {
-      setSessionId(id);
-      // Verify payment with backend
       fetch(`/api/checkout/verify?session_id=${id}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            // Redirect to download page
             window.location.href = `/download?generation=${data.generationId}`;
           }
         })

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { addGenerationJob, getGenerationStatus } from "@/services/generation.service";
-import { checkRateLimit, setSecurityHeaders, sanitizeObject, validateFileUpload } from "@/lib/security";
+import { addGenerationJob } from "@/services/generation.service";
+import { checkRateLimit, setSecurityHeaders, sanitizeObject } from "@/lib/security";
 import { validateSession } from "@/lib/auth";
 
 const generationSchema = z.object({
