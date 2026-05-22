@@ -1,0 +1,67 @@
+# Grad-Pictures.today
+
+## What is Grad-Pictures.today?
+
+Grad-Pictures.today is an AI-powered web application that generates professional graduation and yearbook-style photos for students. It provides an affordable alternative to traditional school photography services.
+
+## How It Works
+
+1. Upload a clear selfie or photo of yourself
+2. Customize graduation attire colors (gown, cap, sash/stole)
+3. For yearbook photos: optionally provide a reference photo to match your school's gown style
+4. For portraits: choose from various backgrounds (studio, campus, forest, outdoor, elegant) and styles (cinematic, realistic, warm, professional, modern)
+5. The AI generates your graduation photo in 1-2 minutes
+
+## Use Cases
+
+- Students who missed their school photoshoot
+- Those seeking a more affordable graduation photography option
+- Anyone wanting to regenerate or refresh their graduation photos
+- Students at schools that don't offer professional graduation photography
+
+## Important Usage Guidelines
+
+- Only upload photos that you own or have permission to use
+- Reference images for yearbook photos are used solely to match gown style and photography aesthetics, not to copy or replicate any individual
+- Users under 18 must have parental or guardian permission to use the service
+
+## Privacy & Data Handling
+
+- Uploaded photos are automatically deleted after 24 hours
+- Generated photos are retained for 7 days unless downloaded
+- Personal data is handled according to the Privacy Policy
+- Consent is required confirming users have rights to uploaded images
+
+## Pricing
+
+- 5 free preview generations per session (with watermark)
+- $5 CAD per high-resolution, watermark-free download
+- Multiple size presets available (Instagram, 4x6, 5x7, 8x10, yearbook, high-resolution)
+
+## Features
+
+- **Yearbook Photos**: Formal yearbook-style portraits with customizable gown/cap colors and optional reference image matching
+- **Graduation Portraits**: Cinematic portraits with background and style selection
+- **Color Customization**: Full color picker with school color presets
+- **Options**: Cap on/off toggle, diploma toggle
+- **Secure Payments**: Powered by Stripe
+
+## FAQ Topics
+
+- How AI generation works
+- Photo safety and privacy
+- Free preview details
+- Download options and pricing
+- Reference photo usage
+- Generation timing
+- Satisfaction policy
+- Age requirements
+- Supported file formats
+- Refund process
+
+## Technical Stack
+
+- Built with Next.js 15, TypeScript, and TailwindCSS
+- AI generation via OpenRouter (Claude model)
+- Storage on Cloudflare R2
+- Payments via Stripe

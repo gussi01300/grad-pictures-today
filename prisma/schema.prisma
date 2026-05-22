@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum GenerationType {
+  YEARBOOK
+  PORTRAIT
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PolicyType {
+  PRIVACY
+  TERMS
+  REFUND
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         UserRole  @default(USER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sessions    Session[]
+  generations Generation[]
+  payments    Payment[]
+  uploads     Upload[]
+  adminLogs   AdminLog[]
+
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model Generation {
+  id          String           @id @default(cuid())
+  userId      String
+  type        GenerationType
+  status      GenerationStatus @default(PENDING)
+  inputData   Json
+  outputUrl   String?
+  watermarkUrl String?
+  attempts    Int              @default(0)
+  maxAttempts Int              @default(5)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payment Payment?
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  stripePaymentId String        @unique
+  amount          Int
+  currency        String        @default("cad")
+  status          PaymentStatus @default(PENDING)
+  generationId    String?       @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generation Generation? @relation(fields: [generationId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([stripePaymentId])
+  @@index([status])
+}
+
+model Upload {
+  id           String   @id @default(cuid())
+  userId       String
+  key          String
+  originalName String
+  mimeType     String
+  size         Int
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Policy {
+  id        String     @id @default(cuid())
+  type      PolicyType @unique
+  content   String     @db.Text
+  updatedAt DateTime   @updatedAt
+}
+
+model CleanupLog {
+  id           String   @id @default(cuid())
+  type         String
+  deletedCount Int
+  deletedSize  BigInt
+  executedAt   DateTime @default(now())
+}
+
+model AdminLog {
+  id        String   @id @default(cuid())
+  adminId   String
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([createdAt])
+}

@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# AI/Crawler directives
+User-agent: CCBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Sitemap
+Sitemap: https://grad-pictures.today/sitemap.xml
+
+# Misc
+Request-rate: 1/10
+Crawl-delay: 10
