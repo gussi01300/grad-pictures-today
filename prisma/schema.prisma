@@ -91,7 +91,7 @@ model Generation {
 model Payment {
   id              String        @id @default(cuid())
   userId          String
-  stripePaymentId String        @unique
+  stripePaymentId String?       @unique
   amount          Int
   currency        String        @default("cad")
   status          PaymentStatus @default(PENDING)

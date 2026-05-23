@@ -17,7 +17,7 @@ export async function createPayment(
       generationId,
       amount,
       currency,
-      stripePaymentId: "pending", // Will be updated after checkout creation
+      stripePaymentId: null,
       status: "PENDING",
     },
   });
@@ -102,7 +102,7 @@ export async function processRefund(
     where: { id: paymentId },
   });
 
-  if (!payment) {
+  if (!payment || !payment.stripePaymentId) {
     return { success: false, error: "Payment not found" };
   }
 

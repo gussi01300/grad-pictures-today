@@ -46,6 +46,7 @@ prisma/dev.db-journal
 
 # Docker
 .docker/
+docker/env.production
 
 # Terraform
 *.tfstate

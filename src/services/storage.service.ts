@@ -59,14 +59,14 @@ export async function cleanupExpiredGenerations(): Promise<CleanupResult> {
       createdAt: { lt: expiryDate },
       payment: null, // Only delete if not paid
     },
-    select: { id: true },
+    select: { id: true, userId: true },
   });
 
   for (const gen of expiredGenerations) {
     try {
       // Delete associated uploads
       const uploads = await db.upload.findMany({
-        where: { userId: gen.id },
+        where: { userId: gen.userId },
         select: { key: true, size: true },
       });
 

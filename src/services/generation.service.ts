@@ -54,8 +54,11 @@ export async function processGenerationJob(
     // Generate image using AI
     const imageUrl = await generateImage(params);
 
-    // Download the generated image
-    const imageResponse = await fetch(imageUrl);
+    // Download the generated image with timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    const imageResponse = await fetch(imageUrl, { signal: controller.signal });
+    clearTimeout(timeout);
     const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
 
     // Upload to R2
@@ -101,13 +104,18 @@ export async function processGenerationJob(
 }
 
 export function createGenerationWorker(): Worker<GenerationJobData> {
+  // Parse Redis URL properly
+  const redisUrl = new URL(process.env.REDIS_URL ?? "redis://localhost:6379");
+  const redisHost = redisUrl.hostname;
+  const redisPort = parseInt(redisUrl.port) || 6379;
+
   return new Worker<GenerationJobData>(
     QUEUE_NAME,
     async (job) => processGenerationJob(job),
     {
       connection: {
-        host: process.env.REDIS_URL?.split("://")[1]?.split(":")[0] ?? "localhost",
-        port: parseInt(process.env.REDIS_URL?.split(":")[2] ?? "6379"),
+        host: redisHost,
+        port: redisPort,
         maxRetriesPerRequest: null,
       },
       concurrency: 5,
