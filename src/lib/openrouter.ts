@@ -5,7 +5,7 @@ const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-export const AI_MODEL = "anthropic/claude-3.5-sonnet";
+export const AI_MODEL = process.env.OPENROUTER_MODEL ?? "anthropic/claude-3.5-sonnet";
 
 export interface GenerationParams {
   type: "YEARBOOK" | "PORTRAIT";

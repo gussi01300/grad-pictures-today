@@ -1,14 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { setSecurityHeaders } from "@/lib/security";
-import { requireAdmin } from "@/lib/security";
+import { validateSession } from "@/lib/auth";
 import { processRefund } from "@/services/payment.service";
+
+async function requireAdminSession(request: NextRequest) {
+  const sessionToken = request.cookies.get("session_token")?.value;
+  if (!sessionToken) return null;
+
+  const session = await validateSession(sessionToken);
+  if (!session) return null;
+
+  const user = await db.user.findUnique({
+    where: { id: session.userId },
+    select: { role: true, id: true },
+  });
+
+  if (!user || user.role !== "ADMIN") return null;
+  return user;
+}
 
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await requireAdmin(request);
-    if (authResult.response) {
-      return setSecurityHeaders(authResult.response);
+    const admin = await requireAdminSession(request);
+    if (!admin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const payments = await db.payment.findMany({
@@ -36,16 +51,16 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const authResult = await requireAdmin(request);
-    if (authResult.response) {
-      return setSecurityHeaders(authResult.response);
+    const admin = await requireAdminSession(request);
+    if (!admin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
     const { paymentId, action } = body;
 
     if (action === "refund") {
-      const result = await processRefund(paymentId, authResult.user.userId);
+      const result = await processRefund(paymentId, admin.id);
       return NextResponse.json(result);
     }
 

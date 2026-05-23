@@ -105,7 +105,10 @@ export function createGenerationWorker(): Worker<GenerationJobData> {
     QUEUE_NAME,
     async (job) => processGenerationJob(job),
     {
-      connection: redis,
+      connection: {
+        ...redis,
+        maxRetriesPerRequest: null,
+      },
       concurrency: 5,
     }
   );

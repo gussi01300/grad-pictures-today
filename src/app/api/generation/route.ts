@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { addGenerationJob } from "@/services/generation.service";
 import { checkRateLimit, setSecurityHeaders, sanitizeObject } from "@/lib/security";
 import { validateSession } from "@/lib/auth";
+import { getSignedDownloadUrl } from "@/lib/r2";
 
 const generationSchema = z.object({
   type: z.enum(["YEARBOOK", "PORTRAIT"]),
@@ -84,8 +85,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get reference photo if provided
-    let referencePhotoUrl: string | undefined;
+    // Get signed URL for user photo (OpenRouter needs public URL)
+    const userPhotoSignedUrl = await getSignedDownloadUrl(data.userPhotoKey);
+
+    // Get reference photo URL if provided
+    let referencePhotoSignedUrl: string | undefined;
     if (data.referencePhotoKey) {
       const refUpload = await db.upload.findFirst({
         where: {
@@ -95,7 +99,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (refUpload) {
-        referencePhotoUrl = `/api/upload/${data.referencePhotoKey}`;
+        referencePhotoSignedUrl = await getSignedDownloadUrl(data.referencePhotoKey);
       }
     }
 
@@ -117,11 +121,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Add to generation queue
+    // Add to generation queue with signed URLs (not paths)
     await addGenerationJob(generation.id, session.userId, {
       type: data.type,
-      userPhotoUrl: `/api/upload/${data.userPhotoKey}`,
-      referencePhotoUrl,
+      userPhotoUrl: userPhotoSignedUrl,
+      referencePhotoUrl: referencePhotoSignedUrl,
       gownColor: data.gownColor,
       capColor: data.capColor,
       sashColor: data.sashColor,

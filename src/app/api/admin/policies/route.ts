@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { setSecurityHeaders } from "@/lib/security";
-import { requireAdmin } from "@/lib/security";
+import { validateSession } from "@/lib/auth";
 import { z } from "zod";
 
 const policySchema = z.object({
@@ -9,11 +8,27 @@ const policySchema = z.object({
   content: z.string().min(1, "Content is required"),
 });
 
+async function requireAdminSession(request: NextRequest) {
+  const sessionToken = request.cookies.get("session_token")?.value;
+  if (!sessionToken) return null;
+
+  const session = await validateSession(sessionToken);
+  if (!session) return null;
+
+  const user = await db.user.findUnique({
+    where: { id: session.userId },
+    select: { role: true, id: true },
+  });
+
+  if (!user || user.role !== "ADMIN") return null;
+  return user;
+}
+
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await requireAdmin(request);
-    if (authResult.response) {
-      return setSecurityHeaders(authResult.response);
+    const admin = await requireAdminSession(request);
+    if (!admin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const policies = await db.policy.findMany();
@@ -30,9 +45,9 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const authResult = await requireAdmin(request);
-    if (authResult.response) {
-      return setSecurityHeaders(authResult.response);
+    const admin = await requireAdminSession(request);
+    if (!admin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
@@ -56,7 +71,7 @@ export async function PUT(request: NextRequest) {
     // Log admin action
     await db.adminLog.create({
       data: {
-        adminId: authResult.user.userId,
+        adminId: admin.id,
         action: "UPDATE_POLICY",
         details: { type, contentLength: content.length },
       },

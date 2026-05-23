@@ -1,13 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { setSecurityHeaders } from "@/lib/security";
-import { requireAdmin } from "@/lib/security";
+import { validateSession } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await requireAdmin(request);
-    if (authResult.response) {
-      return setSecurityHeaders(authResult.response);
+    // Check session cookie for authentication
+    const sessionToken = request.cookies.get("session_token")?.value;
+    if (!sessionToken) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const session = await validateSession(sessionToken);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await db.user.findUnique({
+      where: { id: session.userId },
+      select: { role: true },
+    });
+
+    if (!user || user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
     // Get various stats
