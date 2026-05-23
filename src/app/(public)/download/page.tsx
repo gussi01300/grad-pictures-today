@@ -28,7 +28,7 @@ export default function DownloadPage() {
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          loadGenerations(data.user);
+          loadGenerations();
         } else {
           window.location.href = "/login?redirect=/download";
         }

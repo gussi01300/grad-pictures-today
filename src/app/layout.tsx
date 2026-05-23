@@ -44,21 +44,21 @@ export const metadata: Metadata = {
   ),
 };
 
-export const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Grad-Pictures.today",
-  url: "https://grad-pictures.today",
-  description:
-    "AI-powered graduation and yearbook photo generation service",
-  sameAs: [],
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Grad-Pictures.today",
+    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://grad-pictures.today",
+    description:
+      "AI-powered graduation and yearbook photo generation service",
+    sameAs: [],
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

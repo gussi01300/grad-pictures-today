@@ -13,7 +13,7 @@ interface CleanupResult {
 export async function cleanupExpiredUploads(): Promise<CleanupResult> {
   const now = new Date();
   let deletedCount = 0;
-  const deletedSize = 0;
+  let deletedSize = 0;
 
   // Find expired uploads
   const expiredUploads = await db.upload.findMany({

@@ -12,7 +12,6 @@ function createRedisClient(): Redis {
 
   return new Redis(url, {
     maxRetriesPerRequest: 3,
-    retryDelayOnFailover: 100,
     lazyConnect: true,
   });
 }
